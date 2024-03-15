@@ -1,0 +1,106 @@
+body {
+    background-color: rgb(54, 54, 54);
+    padding-top: 2%;
+}
+
+center {
+    padding-left: 5%;
+    padding-right: 5%
+}
+
+.card {
+    display: inline-flex;
+    border: black 5px;
+    border-radius: 10px;
+    margin-top: 2%;
+    box-shadow: inset rgba(55, 55, 55, 0.5) 2px 2px 20px 20px;
+    background-color: black;
+    color: white;
+    padding: 4%;
+}
+
+.img {
+    display: flex;
+    box-shadow: rgba(133, 132, 132, 0.4) 1px 1px 10px 10px;
+    width: 300px;
+    height: 200px;
+}
+
+.card .card-body header {
+    font-size: 1rem;
+    font-weight: 400;
+    text-align: justify;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.card .card-body .blockquote {
+    font-size: 1rem;
+    text-align: left;
+    margin-right: 0px;
+    font-family: 'Times New Roman', Times, serif;
+    margin-left: 5%;
+
+}
+
+.card .card-body footer {
+    font-size: 1rem;
+    text-align: justify;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+hr {
+    opacity: 0.4;
+}
+
+button {
+    display: flex;
+    height: 3em;
+    width: 100px;
+    align-items: center;
+    justify-content: center;
+    background-color: #eeeeee4b;
+    border-radius: 3px;
+    letter-spacing: 1px;
+    transition: all 0.2s linear;
+    cursor: pointer;
+    border: none;
+    background: #fff;
+    float: right;
+    margin-top: 5%;
+    margin-bottom: 5%;
+    margin-right: 2%;
+   }
+   
+   button > svg {
+    margin-right: 5px;
+    margin-left: 5px;
+    font-size: 20px;
+    transition: all 0.4s ease-in;
+   }
+   
+   button:hover > svg {
+    font-size: 1.2em;
+    transform: translateX(-5px);
+   }
+   
+   button:hover {
+    box-shadow: 9px 9px 33px #d1d1d1, -9px -9px 33px #ffffff;
+    transform: translateY(-2px);
+   }
+#music{
+  float: left;
+  margin-top: 4%;
+  margin-bottom: 4%;
+  
+  
+  
+}
+audio{
+  display: flex;
+  max-height: 100%;
+  max-width: 100%;
+  margin: auto;
+  object-fit: contain;
+  width: 200px;
+  padding: none;
+}

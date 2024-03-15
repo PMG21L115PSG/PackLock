@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pack-Lock</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"></script>
+    <script src="script.js"></script>
+    <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    
+    <script type="text/javascript" src="js/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="js/bootstrap.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
+    </script>
+    <script type="text/javascript" src="js/custom.js"></script>
+    
+    <!-- slider stylesheet -->
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
+    
+    <!-- fonts style -->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:400,700|Raleway:400,700&display=swap" rel="stylesheet" />
+    
+    <!-- bootstrap core css -->
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+    
+    <!-- Custom styles for this template -->
+    <link href="css/style.css" rel="stylesheet" />
+    <!-- responsive style -->
+    
+    <style>
+        /* Add your CSS styles here */
+        /* Navbar Toggler Icon */
+        .navbar-toggler {
+            position: absolute;
+            top: 25px; /* Adjust as needed */
+            right: 10px; /* Adjust as needed */
+            z-index: 9999; /* Ensure it's above other content */
+        }
+        .no-notes {
+            opacity: 0.5; /* 50% transparency */
+        }
+
+        .hero_area {
+            background-color: rgb(255,255,255);
+        }
+        .data-box {
+            position: relative;
+            background-color: #ffffff; /* Pure white background */
+            border-radius: 10px;
+            padding: 30px; /* Increase padding */
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Box shadow */
+            overflow: hidden; /* Hide overflow to prevent shadow from leaking */
+        }
+        .data-box::before {
+            content: "";
+            position: absolute;
+            top: 0px;
+            left: 0px; /* Adjust positioning */
+            height: 100%; 
+            width: 5px; /* Adjust thickness */
+            background-color: orange; /* Orange border */
+            border-radius: -30%; /* Makes it curved inwards */
+            z-index: 1; /* Ensure it's above content */
+        }
+
+        /* Style for the copy icon */
+        .copy-icon {
+            cursor: pointer;
+        }
+
+        /* Hover effect for the copy icon */
+        .copy-icon:hover,
+        .copy-icon:active {
+            background-color: green;
+            border-radius: 50%;
+            padding: 5px;
+        }
+
+        /* Delete button style */
+        .delete-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: rgb(54, 60, 235);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            border-radius: 10px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero_area">
+        <!-- header section strats -->
+        <header class="header_section">
+            <div class="container-fluid">
+                <nav class="navbar navbar-expand-lg custom_nav-container pt-3">
+                    <a class="navbar-brand" href="index.html">
+                        <img style="height: 50px;width: 240px;"  src="images/logo.png" alt="" />
+                    </a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+            
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <div class="d-flex ml-auto flex-column flex-lg-row align-items-center">
+                            <ul class="navbar-nav  ">
+                                <li class="nav-item ">
+                                    <a class="nav-link" href="index.html">
+                                        Home
+                                    </a>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="contact.html">Contact Us</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="about.html">
+                                        About Us
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        <!-- end header section -->
+        <br><br><br>
+        <div id="dataContainer" class="container"></div>
+    </div>
+    <!-- Delete confirmation modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>Are you sure you want to delete this item?</p>
+            <button id="confirmDeleteBtn">Delete</button>
+        </div>
+    </div>
+
+    <!-- Add your JavaScript here -->
+    <script src="https://www.gstatic.com/firebasejs/7.14.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"></script>
+    <script>
+   // Your Firebase configuration
+var firebaseConfig = {
+    apiKey: "AIzaSyB1P2CTKVlJCHg4eD9gChOMMArU3labEwc",
+    authDomain: "pcklck-1aa5c.firebaseapp.com",
+    databaseURL: "https://pcklck-1aa5c-default-rtdb.firebaseio.com",
+    projectId: "pcklck-1aa5c",
+    storageBucket: "pcklck-1aa5c.appspot.com",
+    messagingSenderId: "465342878161",
+    appId: "1:465342878161:web:cbb0d80280c95ced3cd0f0",
+    measurementId: "G-CXP50BPCL4"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+
+// Reference to the database
+var deleteFormDB = firebase.database().ref("deleteForm");
+
+// Function to move data from deleteForm to deleteForm if OTP is 'NULL'
+// Function to move data from deleteForm to deleteForm if OTP is 'NULL' and rename remaining datasets
+function moveDataWithNullOTP() {
+    deleteFormDB.once('value', function(snapshot) {
+        var updatedData = {}; // To store updated data for deleteForm node
+        var deleteFormData = {}; // To store data to be moved to deleteForm node
+        var count = 0; // To track the count of datasets in deleteForm node
+
+        snapshot.forEach(function(childSnapshot) {
+            var data = childSnapshot.val();
+            var key = childSnapshot.key;
+            var otp = data.OTP;
+
+            if (otp === 'NULL') { // Check if OTP is 'NULL' (as a string)
+                // If OTP is 'NULL', move the dataset to deleteForm node
+                deleteFormData[key] = data;
+            } else {
+                // If OTP is not 'NULL', include it in updatedData with a new key
+                count++;
+                updatedData[count] = data;
+            }
+        });
+
+        // Update deleteForm node with the remaining datasets
+        deleteFormDB.set(updatedData);
+
+        // Move datasets with 'NULL' OTP to deleteForm node
+        firebase.database().ref('deleteForm').update(deleteFormData);
+
+        // Rename datasets in deleteForm node as 1, 2, 3, ...
+        var index = 0;
+        Object.keys(deleteFormData).forEach(function(key) {
+            index++;
+            var updateKey = index.toString();
+            var updateData = deleteFormData[key];
+            firebase.database().ref('deleteForm').child(updateKey).set(updateData);
+            firebase.database().ref('deleteForm').child(key).remove();
+        });
+    });
+}
+
+
+// Function to format date to "dd/mm/yyyy" format
+function formatDate(date) {
+    var day = date.getDate();
+    var month = date.getMonth() + 1; // Months are zero based
+    var year = date.getFullYear();
+
+    // Add leading zeros if needed
+    if (day < 10) {
+        day = '0' + day;
+    }
+    if (month < 10) {
+        month = '0' + month;
+    }
+
+    return day + '/' + month + '/' + year;
+}
+
+// Function to save the count of datasets under "deleteForm" to Firebase
+function savedeleteCount(count) {
+    firebase.database().ref('deleteCount').set(count);
+}
+
+// Function to fetch and display data
+function displayData() {
+    deleteFormDB.once('value', function(snapshot) {
+        var dataContainer = document.getElementById('dataContainer');
+        dataContainer.innerHTML = ''; // Clear previous data
+        var count = 0; // Initialize count variable
+
+        if (snapshot.exists()) {
+            snapshot.forEach(function(childSnapshot) {
+                var data = childSnapshot.val();
+                var key = childSnapshot.key; // Get the unique key of the data
+                var deliveryCompany = data.deliveryCompany;
+                var deliveryDate = new Date(data.deliveryDate); // Convert delivery date to Date object
+                var recievedDate = data.recievedDate; // Fetch the 'recievedDate' from the data
+                var recievedTime = data.recievedTime; // Fetch the 'recievedTime' from the data
+                var otp = data.OTP; // Fetch the 'OTP' from the data
+                var msgContent = data.msgContent; // Fetch the 'Notes' from the date
+                // Check if delivery date is in the past
+                var currentDate = new Date();
+                var isPast = deliveryDate < currentDate;
+
+                // Check if delivery date is today
+                var isToday = deliveryDate.getDate() === currentDate.getDate() &&
+                              deliveryDate.getMonth() === currentDate.getMonth() &&
+                              deliveryDate.getFullYear() === currentDate.getFullYear();
+
+                // Apply background color based on delivery date
+                var backgroundColor = '';
+                var borderColor = ''; // Border color for orange lining
+                
+                if (isToday) {
+                    backgroundColor = 'transparent'; // Light green
+                    borderColor = 'orange'; // Orange for border color
+                } else if (isPast) {
+                    backgroundColor = 'transparent'; // Lighter shade of red
+                    borderColor = 'red'; // Normal red for border color
+                } else {
+                    backgroundColor = 'transparent'; // Default background color
+                    borderColor = 'orange'; // Orange for border color
+                }
+
+                // Create HTML elements with styling for each dataset
+                var box = document.createElement('div');
+                box.className = 'data-box'; // Apply CSS class for styling
+                box.style.backgroundColor = backgroundColor; // Apply background color
+                box.style.borderColor = borderColor; // Apply border color
+                box.innerHTML = '<button class="delete-button" onclick="showDeleteConfirmation(\'' + key + '\')">Delete</button>' +
+                                '<strong>Delivery Company:</strong> ' + deliveryCompany + '<br>' +
+                                '<strong>Scheduled Date:</strong> ' + formatDate(deliveryDate) + '<br>' + // Format the date
+                                '<strong>received Date:</strong> ' + recievedDate + '<br>' +
+                                '<strong>received Time:</strong> ' + recievedTime + '<br>' +
+                                
+                                '<strong>Notes:</strong> ' + msgContent; // Include 'Notes' last in the box content
+                dataContainer.appendChild(box);
+
+                // Increment count for each dataset
+                count++;
+            });
+        } else {
+            // If no data exists, create a data box with "No pending deliveries scheduled" message
+            var noDataBox = document.createElement('div');
+            noDataBox.className = 'data-box';
+            noDataBox.innerHTML = 'Activity Log is Empty';
+            dataContainer.appendChild(noDataBox);
+        }
+
+        // Save the count to Firebase
+        save(count);
+    });
+}
+
+
+// Function to display the delete confirmation modal
+function showDeleteConfirmation(key) {
+    var modal = document.getElementById('deleteModal');
+    modal.style.display = 'block';
+
+    // When the user clicks on <span> (x), close the modal
+    var closeBtn = document.getElementsByClassName('close')[0];
+    closeBtn.onclick = function() {
+        modal.style.display = 'none';
+    }
+
+    // When the user clicks on the delete button in the modal, delete the data
+    var confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+    confirmDeleteBtn.onclick = function() {
+        deleteData(key);
+        modal.style.display = 'none';
+    }
+}
+
+// Function to delete data from Firebase and update subsequent keys
+function deleteData(key) {
+    // Reference the dataset to be deleted
+    var dataRef = deleteFormDB.child(key);
+    
+    // Fetch the current data
+    deleteFormDB.once('value', function(snapshot) {
+        var data = snapshot.val();
+        
+        // Remove the dataset to be deleted
+        dataRef.remove();
+        
+        // Update subsequent keys
+        var updatedData = {};
+        var index = 1;
+        snapshot.forEach(function(childSnapshot) {
+            if (childSnapshot.key !== key) {
+                updatedData[index] = childSnapshot.val();
+                index++;
+            }
+        });
+
+        // Save the updated data back to the database
+        deleteFormDB.set(updatedData);
+        
+        // Refresh data
+        displayData();
+    });
+}
+
+// Call the function to move data with 'NULL' OTP when the page loads
+window.onload = function() {
+    moveDataWithNullOTP();
+    // Then display the remaining data
+    displayData();
+};
+
+
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Pack-Lock</title>
+    <!-- Your existing stylesheets and scripts -->
+    <link href="https://use.fontawesome.com/releases/v5.0.4/css/all.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="SAD.css">
+
+    <!-- jQuery and Firebase -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.9.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-database.js"></script>
+
+    <!-- Your existing styles -->
+    <style>
+        /* Error Message Styling */
+        .error-message {
+            color: red;
+            font-size: 14px;
+        }
+
+        /* Success Message Styling */
+        .success-message {
+            color: green;
+            font-size: 14px;
+        }
+
+        /* Input Box Styling */
+        .input-box {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+        }
+
+        /* Container Styling */
+        .container {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<br><br><br><br><br>
+<body style="background-color: aliceblue;">
+    <!-- Your existing HTML content -->
+
+    <!-- Change Masterkey Section -->
+    <div class="container">
+        <h2>Change Masterkey</h2>
+        <form id="change-masterkey-form">
+            <div class="error-message" id="error-message"></div>
+            <div class="success-message" id="success-message"></div> <!-- Add this line for success message -->
+            <input type="password" id="new-masterkey" class="input-box" placeholder="Enter New Masterkey">
+            <input type="password" id="confirm-masterkey" class="input-box" placeholder="Confirm New Masterkey">
+            <button type="submit">Update Masterkey</button>
+            <button type="button" onclick="goBack()">Back</button> <!-- Add back button -->
+        </form>
+    </div>
+    
+
+    <!-- Your existing scripts -->
+    <script>
+        // Firebase configuration
+        var firebaseConfig = {
+				 apiKey: "AIzaSyB1P2CTKVlJCHg4eD9gChOMMArU3labEwc",
+		 authDomain: "pcklck-1aa5c.firebaseapp.com",
+		 databaseURL: "https://pcklck-1aa5c-default-rtdb.firebaseio.com",
+		 projectId: "pcklck-1aa5c",
+		 storageBucket: "pcklck-1aa5c.appspot.com",
+		 messagingSenderId: "465342878161",
+		 appId: "1:465342878161:web:cbb0d80280c95ced3cd0f0",
+		 measurementId: "G-CXP50BPCL4"
+			 };
+		 
+  
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+
+        // Reference to the database
+        var masterkeyRef = firebase.database().ref("masterkey");
+
+        // Function to go back
+        function goBack() {
+            window.history.back();
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            document.getElementById("change-masterkey-form").addEventListener("submit", function(event) {
+                event.preventDefault();
+
+                var newMasterkey = document.getElementById("new-masterkey").value;
+                var confirmMasterkey = document.getElementById("confirm-masterkey").value;
+                var errorMessage = document.getElementById("error-message");
+                var successMessage = document.getElementById("success-message");
+
+                // Check if the new masterkey meets the conditions and matches the confirmation
+                if (/^\d{6}$/.test(newMasterkey) && newMasterkey === confirmMasterkey) {
+                    errorMessage.textContent = ""; // Clear any previous error message
+                    // Proceed with updating the masterkey in the database
+                    masterkeyRef.set(newMasterkey)
+                        .then(function() {
+                            console.log("Masterkey updated successfully");
+                            successMessage.textContent = "Masterkey updated successfully"; // Display success message
+
+                            // Redirect to index.html after a delay
+                            setTimeout(function() {
+                                window.location.href = "index.html";
+                            }, 1000); // 1000 milliseconds = 1 second
+                        })
+                        .catch(function(error) {
+                            console.error("Error updating masterkey:", error);
+                            // Optionally, you can display an error message to the user
+                        });
+                } else {
+                    errorMessage.textContent = "New masterkey must be 6 digits long and contain only numbers (0-9), and the confirmation must match.";
+                }
+            });
+        });
+    </script>
+</body>
+</html>

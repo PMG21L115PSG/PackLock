@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Image from Firebase Storage</title>
+</head>
+<body>
+    <!-- Include Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+      <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+      <script>
+        // Your Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyB1P2CTKVlJCHg4eD9gChOMMArU3labEwc",
+	authDomain: "pcklck-1aa5c.firebaseapp.com",
+	databaseURL: "https://pcklck-1aa5c-default-rtdb.firebaseio.com",
+	projectId: "pcklck-1aa5c",
+	storageBucket: "pcklck-1aa5c.appspot.com",
+	messagingSenderId: "465342878161",
+	appId: "1:465342878161:web:cbb0d80280c95ced3cd0f0",
+	measurementId: "G-CXP50BPCL4"
+        };
+    
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    
+        // Get a reference to the Firebase Storage
+        var storage = firebase.storage();
+    
+        function fetchAndDisplayImage() {
+            // Reference to the image file in Storage
+            var imageRef = storage.ref().child('/data/photo.jpg'); // Replace with the correct path to your image
+    
+            // Fetch the image file
+            imageRef.getDownloadURL().then(function(url) {
+                // Display the image in the 'photo' element
+                document.getElementById('photo').src = url;
+            }).catch(function(error) {
+                console.error("Error fetching image from Storage:", error);
+            });
+        }
+
+        // Call fetchAndDisplayImage function when the page finishes loading
+        window.onload = function() {
+            fetchAndDisplayImage();
+        };
+    </script>
+    
+    <!-- Image element to display the fetched image -->
+    <img id="photo" alt="Fetched Photo" height="125px" width="200px">
+
+</body>
+</html>
